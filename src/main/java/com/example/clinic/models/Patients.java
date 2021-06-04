@@ -25,7 +25,7 @@ public class Patients {
     @Column(nullable = false)
     private String state;
 
-    @Column(unique = true, nullable = false)
+    @Column(nullable = false)
     private String address;
 
     @Column(nullable = false)
