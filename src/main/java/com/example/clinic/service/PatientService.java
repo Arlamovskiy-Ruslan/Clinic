@@ -32,13 +32,15 @@ public class PatientService {
 
         Optional<Patient> patientOptional = patientRepo.findById(id);
 
-        if (!patientOptional.isPresent())
+        if (patientOptional.isPresent()) {
+            patient.setId(id);
+
+            patientRepo.save(patient);
+
+            return ResponseEntity.noContent().build();
+        } else {
             return ResponseEntity.notFound().build();
+        }
 
-        patient.setId(id);
-
-        patientRepo.save(patient);
-
-        return ResponseEntity.noContent().build();
     }
 }
