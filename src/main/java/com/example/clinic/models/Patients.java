@@ -20,6 +20,15 @@ public class Patients {
     private String lastName;
 
     @Column(nullable = false)
+    private String sex;
+
+    @Column(nullable = false)
+    private int age;
+
+    @Column(nullable = false)
+    private Date dateOfBirth;
+
+    @Column(nullable = false)
     private String country;
 
     @Column(nullable = false)
@@ -27,14 +36,5 @@ public class Patients {
 
     @Column(nullable = false)
     private String address;
-
-    @Column(nullable = false)
-    private String sex;
-
-    @Column(nullable = false)
-    private Date dateOfBirth;
-
-    @Column(nullable = false)
-    private int age;
 
 }
