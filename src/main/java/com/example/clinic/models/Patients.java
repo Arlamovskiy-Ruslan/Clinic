@@ -36,5 +36,4 @@ public class Patients {
 
     @Column(nullable = false)
     private String address;
-
 }
