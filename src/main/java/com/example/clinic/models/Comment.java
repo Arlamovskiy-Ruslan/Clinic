@@ -7,7 +7,7 @@ import java.util.Date;
 
 @Data
 @Entity
-public class Comments {
+public class Comment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -15,11 +15,11 @@ public class Comments {
 
     @Column(nullable = false)
     private String text;
-    
+
     @Column(nullable = false)
     private Date date;
 
-    @Column(nullable = false)
-    private String country;
+    @ManyToOne
+    private Patient patient;
 
 }

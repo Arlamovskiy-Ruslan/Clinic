@@ -4,10 +4,11 @@ import lombok.Data;
 
 import javax.persistence.*;
 import java.sql.Date;
+import java.util.List;
 
 @Data
 @Entity
-public class Patients {
+public class Patient {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -36,4 +37,11 @@ public class Patients {
 
     @Column(nullable = false)
     private String address;
+
+    @OneToMany(
+            mappedBy = "patient",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true ,fetch = FetchType.EAGER
+    )
+    private List<Comment> comments;
 }
