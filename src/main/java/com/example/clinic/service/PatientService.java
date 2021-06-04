@@ -1,4 +1,7 @@
 package com.example.clinic.service;
 
-public class PatientController {
+import org.springframework.stereotype.Service;
+
+@Service
+public class PatientService {
 }
