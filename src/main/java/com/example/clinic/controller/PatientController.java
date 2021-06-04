@@ -44,7 +44,7 @@ public class PatientController {
         patientService.createPatient(patient);
     }
 
-    @RequestMapping(value = "/patient/update",method = RequestMethod.PUT)
+    @RequestMapping(value = "/patient/{id}/update",method = RequestMethod.PUT)
     public void updatePatient(@RequestBody Patient patient, @PathVariable long id) {
         patientService.updatePatient(patient, id);
     }
