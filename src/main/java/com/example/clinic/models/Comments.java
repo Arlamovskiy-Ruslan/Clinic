@@ -3,7 +3,7 @@ package com.example.clinic.models;
 import lombok.Data;
 
 import javax.persistence.*;
-import java.sql.Date;
+import java.util.Date;
 
 @Data
 @Entity
@@ -15,10 +15,9 @@ public class Comments {
 
     @Column(nullable = false)
     private String text;
-
-    @Temporal(TemporalType.TIMESTAMP)
+    
     @Column(nullable = false)
-    private Date currentDate;
+    private Date date;
 
     @Column(nullable = false)
     private String country;
