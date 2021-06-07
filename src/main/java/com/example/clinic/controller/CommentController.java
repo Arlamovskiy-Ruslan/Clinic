@@ -6,19 +6,20 @@ import com.example.clinic.service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/patient/{id}")
-public class CommentContoller {
+@RequestMapping("/patient")
+public class CommentController {
 
     private final CommentRepo commentRepo;
 
     private final CommentService commentService;
 
     @Autowired
-    public CommentContoller(CommentRepo commentRepo, CommentService commentService) {
+    public CommentController(CommentRepo commentRepo, CommentService commentService) {
         this.commentRepo = commentRepo;
         this.commentService = commentService;
     }
@@ -39,13 +40,9 @@ public class CommentContoller {
         commentRepo.deleteById(id);
     }
 
-    @RequestMapping(value = "/comment/create", method = RequestMethod.POST)
-    public void createComment(@RequestBody Comment comment) {
-        commentService.createComment(comment);
-    }
+    @RequestMapping(value = "/{id}/comment/create", method = RequestMethod.POST)
+    public void createComment(@RequestBody Comment comment, @PathVariable long id) { commentService.createComment(comment, id); }
 
     @RequestMapping(value = "/comment/{id}/update",method = RequestMethod.PUT)
-    public void updateComment(@RequestBody Comment comment, @PathVariable long id) {
-        commentService.updateComment(comment, id);
-    }
+    public void updateComment(@RequestBody Comment comment, @PathVariable long id) { commentService.updateComment(comment, id); }
 }
