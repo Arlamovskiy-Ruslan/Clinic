@@ -1,8 +1,7 @@
 # Clinic
 
-
+   *Requests*
 ```
-
 / - main page
 
 /patient/{id} - get patient by id
@@ -22,5 +21,4 @@
 /patient/{id}/comment/create - create comment
 
 /patient/comment/{id}/update - update comment
-
 ```
