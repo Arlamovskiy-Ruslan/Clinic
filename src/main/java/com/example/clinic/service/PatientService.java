@@ -1,6 +1,6 @@
 package com.example.clinic.service;
 
-import com.example.clinic.models.Patient;
+import com.example.clinic.entity.Patient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
