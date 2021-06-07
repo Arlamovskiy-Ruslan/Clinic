@@ -29,17 +29,17 @@ public class CommentService {
         this.patientRepo = patientRepo;
     }
 
-    public void commentByPatient(Comment comment, Principal principal) {
-        Patient patient = patientRepo.findByFirstName(principal.getName()).get();
-        comment.setPatient(patient);
-        commentRepo.save(comment);
-    }
+    public ResponseEntity<Object> createComment(@RequestBody Comment comment, @PathVariable long id) {
+        Optional<Patient> patientOptional= patientRepo.findById(id);
 
-    public ResponseEntity<Object> createComment(@RequestBody Comment comment) {
-        Comment savedComments = commentRepo.save(comment);
+        Patient patient=patientOptional.get();
+
+        comment.setPatient(patient);
+
+        commentRepo.save(comment);
 
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
-                .buildAndExpand(savedComments.getId()).toUri();
+                .buildAndExpand(comment.getId()).toUri();
 
         return ResponseEntity.created(location).build();
     }

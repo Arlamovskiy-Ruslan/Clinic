@@ -15,9 +15,12 @@ import java.util.Optional;
 @Service
 public class PatientService {
 
-    @Autowired
     private PatientRepo patientRepo;
 
+    @Autowired
+    public PatientService(PatientRepo patientRepo) {
+        this.patientRepo = patientRepo;
+    }
 
     public ResponseEntity<Object> createPatient(@RequestBody Patient patient) {
         Patient savedPatients = patientRepo.save(patient);
