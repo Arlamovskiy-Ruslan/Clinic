@@ -5,9 +5,9 @@ import lombok.Data;
 import javax.persistence.*;
 import java.util.Date;
 
-@Data
+
 @Entity
-public class CommentEntity {
+public class Comment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -20,6 +20,36 @@ public class CommentEntity {
     private Date date;
 
     @ManyToOne
-    private PatientEntity patient;
+    private Patient patient;
 
+    public Comment() {
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getText() {
+        return text;
+    }
+
+    public void setText(String text) {
+        this.text = text;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+    public void setPatient(Patient patient) {
+        this.patient = patient;
+    }
 }
