@@ -1,6 +1,6 @@
 package com.example.clinic.controller;
 
-import com.example.clinic.models.Patient;
+import com.example.clinic.entity.Patient;
 import com.example.clinic.repo.PatientRepo;
 import com.example.clinic.service.PatientService;
 import org.springframework.beans.factory.annotation.Autowired;

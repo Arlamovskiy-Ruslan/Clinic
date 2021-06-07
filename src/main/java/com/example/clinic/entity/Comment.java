@@ -1,4 +1,4 @@
-package com.example.clinic.models;
+package com.example.clinic.entity;
 
 import lombok.Data;
 
@@ -7,7 +7,7 @@ import java.util.Date;
 
 @Data
 @Entity
-public class Comment {
+public class CommentEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -20,6 +20,6 @@ public class Comment {
     private Date date;
 
     @ManyToOne
-    private Patient patient;
+    private PatientEntity patient;
 
 }

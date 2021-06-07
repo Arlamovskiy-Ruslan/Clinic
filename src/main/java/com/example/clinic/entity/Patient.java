@@ -1,4 +1,4 @@
-package com.example.clinic.models;
+package com.example.clinic.entity;
 
 import lombok.Data;
 
@@ -8,7 +8,7 @@ import java.util.List;
 
 @Data
 @Entity
-public class Patient {
+public class PatientEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -40,8 +40,7 @@ public class Patient {
 
     @OneToMany(
             mappedBy = "patient",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true ,fetch = FetchType.EAGER
+            cascade = CascadeType.ALL
     )
-    private List<Comment> comments;
+    private List<CommentEntity> comments;
 }
