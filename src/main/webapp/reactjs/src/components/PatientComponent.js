@@ -29,6 +29,7 @@ class PatientComponent extends React.Component {
                 <div className="Search">
                     <input className="search_user" type="text" size="15"/>
                     <Button className="add_button">New Patient</Button>
+                    <hr className="vl2"/>
                 </div>
                 <div className="Patients">
                     {
