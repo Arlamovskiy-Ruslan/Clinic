@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/")
+@CrossOrigin("*")
 public class PatientController {
 
     private final PatientRepo patientRepo;
@@ -22,7 +22,6 @@ public class PatientController {
         this.patientRepo = patientRepo;
         this.patientService = patientService;
     }
-
     @RequestMapping("/")
     public List<Patient> getAllPatients() {
         return patientRepo.findAll();
