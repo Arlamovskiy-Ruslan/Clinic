@@ -1,12 +1,12 @@
 import React from "react";
 import './App.css';
-import PatientComponent from "./components/PatientComponent";
+import Patients from "./components/Patients";
 import {render} from "@testing-library/react";
 
 function App() {
         return (
             <div>
-                <PatientComponent/>
+                <Patients/>
             </div>
         );
 }

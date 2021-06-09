@@ -2,7 +2,7 @@ import React from "react";
 import axios from "axios";
 import {Button, Card} from "react-bootstrap";
 
-class PatientComponent extends React.Component {
+class Patients extends React.Component {
 
     constructor(props) {
         super(props);
@@ -53,4 +53,4 @@ class PatientComponent extends React.Component {
 
 }
 
-export default PatientComponent
+export default Patients
