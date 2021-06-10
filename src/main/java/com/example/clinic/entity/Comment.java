@@ -1,11 +1,12 @@
 package com.example.clinic.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Data;
 
 import javax.persistence.*;
 import java.util.Date;
 
-
+@Data
 @Entity
 public class Comment {
 
@@ -20,36 +21,7 @@ public class Comment {
     private Date date;
 
     @ManyToOne
+    @JsonBackReference
     private Patient patient;
 
-    public Comment() {
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getText() {
-        return text;
-    }
-
-    public void setText(String text) {
-        this.text = text;
-    }
-
-    public Date getDate() {
-        return date;
-    }
-
-    public void setDate(Date date) {
-        this.date = date;
-    }
-
-    public void setPatient(Patient patient) {
-        this.patient = patient;
-    }
 }
