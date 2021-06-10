@@ -17,23 +17,23 @@ import java.util.Optional;
 @Service
 public class PatientService {
 
-    private PatientRepo patientRepo;
+    private final PatientRepo patientRepo;
 
     @Autowired
     public PatientService(PatientRepo patientRepo) {
         this.patientRepo = patientRepo;
     }
 
-    public ResponseEntity<Object> createPatient(@RequestBody Patient patient) {
+    public void createPatient(Patient patient) {
         Patient savedPatients = patientRepo.save(patient);
 
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
                 .buildAndExpand(savedPatients.getId()).toUri();
 
-        return ResponseEntity.created(location).build();
+        ResponseEntity.created(location).build();
     }
 
-    public ResponseEntity<Object> updatePatient(@RequestBody Patient patient, @PathVariable long id) {
+    public void updatePatient(Patient patient, long id) {
 
         Optional<Patient> patientOptional = patientRepo.findById(id);
 
@@ -42,16 +42,16 @@ public class PatientService {
 
             patientRepo.save(patient);
 
-            return ResponseEntity.noContent().build();
+            ResponseEntity.noContent().build();
         } else {
-            return ResponseEntity.notFound().build();
+            ResponseEntity.notFound().build();
         }
 
     }
 
     public List<Patient> getAllPatients() {
         List<Patient> patients = new ArrayList<>();
-        patientRepo.findAll().forEach(patients::add);
+        patients.addAll(patientRepo.findAll());
         return patients;
     }
 

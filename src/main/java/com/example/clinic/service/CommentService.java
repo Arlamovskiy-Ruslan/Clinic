@@ -12,16 +12,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
-import java.security.Principal;
 import java.util.Optional;
 
 @Service
 public class CommentService {
 
 
-    private CommentRepo commentRepo;
+    private final CommentRepo commentRepo;
 
-    private PatientRepo patientRepo;
+    private final PatientRepo patientRepo;
 
     @Autowired
     public CommentService(CommentRepo commentRepo, PatientRepo patientRepo) {
@@ -29,10 +28,10 @@ public class CommentService {
         this.patientRepo = patientRepo;
     }
 
-    public ResponseEntity<Object> createComment(@RequestBody Comment comment, @PathVariable long id) {
-        Optional<Patient> patientOptional= patientRepo.findById(id);
+    public void createComment(Comment comment, long id) {
+        Optional<Patient> patientOptional = patientRepo.findById(id);
 
-        Patient patient=patientOptional.get();
+        Patient patient = patientOptional.get();
 
         comment.setPatient(patient);
 
@@ -41,10 +40,10 @@ public class CommentService {
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
                 .buildAndExpand(comment.getId()).toUri();
 
-        return ResponseEntity.created(location).build();
+        ResponseEntity.created(location).build();
     }
 
-    public ResponseEntity<Object> updateComment(@RequestBody Comment comment, @PathVariable long id) {
+    public void updateComment(Comment comment, long id) {
 
         Optional<Comment> commentOptional = commentRepo.findById(id);
 
@@ -53,9 +52,9 @@ public class CommentService {
 
             commentRepo.save(comment);
 
-            return ResponseEntity.noContent().build();
+            ResponseEntity.noContent().build();
         } else {
-            return ResponseEntity.notFound().build();
+            ResponseEntity.notFound().build();
         }
 
     }
