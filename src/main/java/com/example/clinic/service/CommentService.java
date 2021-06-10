@@ -59,4 +59,12 @@ public class CommentService {
         }
 
     }
+
+    public Comment getCommentById(long id) {
+        return commentRepo.findById(id).get();
+    }
+
+    public void deleteCommentById(long id) {
+        commentRepo.deleteById(id);
+    }
 }

@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -45,5 +47,19 @@ public class PatientService {
             return ResponseEntity.notFound().build();
         }
 
+    }
+
+    public List<Patient> getAllPatients() {
+        List<Patient> patients = new ArrayList<>();
+        patientRepo.findAll().forEach(patients::add);
+        return patients;
+    }
+
+    public Patient getPatientById(long id) {
+       return patientRepo.findById(id).get();
+    }
+
+    public void deletePatientById(long id) {
+        patientRepo.deleteById(id);
     }
 }
