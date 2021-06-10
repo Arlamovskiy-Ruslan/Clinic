@@ -1,16 +1,13 @@
 package com.example.clinic.controller;
 
 import com.example.clinic.entity.Patient;
-import com.example.clinic.repo.PatientRepo;
 import com.example.clinic.service.PatientService;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @CrossOrigin("*")
