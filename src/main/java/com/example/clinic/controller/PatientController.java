@@ -3,7 +3,10 @@ package com.example.clinic.controller;
 import com.example.clinic.entity.Patient;
 import com.example.clinic.repo.PatientRepo;
 import com.example.clinic.service.PatientService;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -11,41 +14,38 @@ import java.util.Optional;
 
 @RestController
 @CrossOrigin("*")
+@AllArgsConstructor
 public class PatientController {
-
-    private final PatientRepo patientRepo;
 
     private final PatientService patientService;
 
-    @Autowired
-    public PatientController(PatientRepo patientRepo, PatientService patientService) {
-        this.patientRepo = patientRepo;
-        this.patientService = patientService;
-    }
-    @RequestMapping("/")
-    public List<Patient> getAllPatients() {
-        return patientRepo.findAll();
+    @GetMapping
+    public ResponseEntity<List<Patient>> getAllPatients() {
+        List<Patient> patients = patientService.getAllPatients();
+        return new ResponseEntity<>(patients, HttpStatus.OK);
     }
 
-    @RequestMapping("/patient/{id}")
-    public Patient retrievePatient(@PathVariable long id) {
-        Optional<Patient> patients = patientRepo.findById(id);
-        return patients.get();
+    @GetMapping({"/patient/{id}"})
+    public ResponseEntity<Patient> retrievePatient(@PathVariable("id") long id) {
+        return new ResponseEntity<>(patientService.getPatientById(id), HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/patient/{id}/delete", method = RequestMethod.DELETE)
-    public void deletePatient(@PathVariable long id) {
-        patientRepo.deleteById(id);
+    @DeleteMapping({"/patient/{id}/delete"})
+    public ResponseEntity<Patient> deletePatient(@PathVariable("id") long id) {
+        patientService.deletePatientById(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @RequestMapping(value = "/patient/create", method = RequestMethod.POST)
-    public void createPatient(@RequestBody Patient patient) {
+    @PostMapping({"/patient/create"})
+    public ResponseEntity<Patient> createPatient(@RequestBody Patient patient) {
         patientService.createPatient(patient);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @RequestMapping(value = "/patient/{id}/update",method = RequestMethod.PUT)
-    public void updatePatient(@RequestBody Patient patient, @PathVariable long id) {
+    @PutMapping({"/patient/{id}/update"})
+    public ResponseEntity<Patient> updatePatient(@RequestBody Patient patient, @PathVariable("id") long id) {
         patientService.updatePatient(patient, id);
+        return new ResponseEntity<>(patientService.getPatientById(id), HttpStatus.OK);
     }
 }
 
