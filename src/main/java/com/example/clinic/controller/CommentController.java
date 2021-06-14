@@ -16,11 +16,6 @@ public class CommentController {
 
     private final CommentService commentService;
 
-    @GetMapping({"/comment/{id}"})
-    public ResponseEntity<Comment> retrieveComment(@PathVariable("id") long id) {
-        return new ResponseEntity<>(commentService.getCommentById(id), HttpStatus.OK);
-    }
-
     @DeleteMapping({"/comment/{id}/delete"})
     public ResponseEntity<Comment> deleteComment(@PathVariable("id") long id) {
         commentService.deleteCommentById(id);
