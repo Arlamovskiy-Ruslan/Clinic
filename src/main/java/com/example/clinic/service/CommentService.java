@@ -4,6 +4,7 @@ import com.example.clinic.entity.Comment;
 import com.example.clinic.entity.Patient;
 import com.example.clinic.repo.CommentRepo;
 import com.example.clinic.repo.PatientRepo;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -15,18 +16,13 @@ import java.net.URI;
 import java.util.Optional;
 
 @Service
+@AllArgsConstructor
 public class CommentService {
 
 
     private final CommentRepo commentRepo;
 
     private final PatientRepo patientRepo;
-
-    @Autowired
-    public CommentService(CommentRepo commentRepo, PatientRepo patientRepo) {
-        this.commentRepo = commentRepo;
-        this.patientRepo = patientRepo;
-    }
 
     public void createComment(Comment comment, long id) {
         Optional<Patient> patientOptional = patientRepo.findById(id);

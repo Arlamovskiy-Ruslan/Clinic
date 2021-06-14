@@ -1,6 +1,7 @@
 package com.example.clinic.service;
 
 import com.example.clinic.entity.Patient;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -15,14 +16,10 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@AllArgsConstructor
 public class PatientService {
 
     private final PatientRepo patientRepo;
-
-    @Autowired
-    public PatientService(PatientRepo patientRepo) {
-        this.patientRepo = patientRepo;
-    }
 
     public void createPatient(Patient patient) {
         Patient savedPatients = patientRepo.save(patient);
