@@ -2,15 +2,10 @@ package com.example.clinic.service;
 
 import com.example.clinic.entity.Patient;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import com.example.clinic.repo.PatientRepo;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -21,13 +16,8 @@ public class PatientService {
 
     private final PatientRepo patientRepo;
 
-    public void createPatient(Patient patient) {
-        Patient savedPatients = patientRepo.save(patient);
-
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
-                .buildAndExpand(savedPatients.getId()).toUri();
-
-        ResponseEntity.created(location).build();
+    public Patient createPatient(Patient patient) {
+        return patientRepo.save(patient);
     }
 
     public void updatePatient(Patient patient, long id) {
