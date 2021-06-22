@@ -34,9 +34,8 @@ public class PatientController {
     }
 
     @PostMapping({"/patient/create"})
-    public ResponseEntity<Patient> createPatient(@RequestBody Patient patient) {
-        patientService.createPatient(patient);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+    public Patient createPatient(@RequestBody Patient patient) {
+        return patientService.createPatient(patient);
     }
 
     @PutMapping({"/patient/{id}/update"})
@@ -44,5 +43,8 @@ public class PatientController {
         patientService.updatePatient(patient, id);
         return new ResponseEntity<>(patientService.getPatientById(id), HttpStatus.OK);
     }
+
+
+
 }
 
