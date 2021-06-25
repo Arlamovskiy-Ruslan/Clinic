@@ -23,9 +23,8 @@ public class CommentController {
     }
 
     @PostMapping({"/{id}/comment/create"})
-    public ResponseEntity<Comment> createComment(@RequestBody Comment comment, @PathVariable("id") long id) {
-        commentService.createComment(comment, id);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+    public Comment createComment(@RequestBody Comment comment, @PathVariable("id") long id) {
+        return commentService.createComment(comment, id);
     }
 
     @PostMapping({"/comment/{id}/update"})
