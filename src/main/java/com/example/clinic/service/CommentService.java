@@ -49,7 +49,5 @@ public class CommentService {
         return commentRepo.findById(id).get();
     }
 
-    public void deleteCommentById(long id) {
-        commentRepo.deleteById(id);
-    }
+    public void deleteCommentById(long id) { commentRepo.deleteById(id); }
 }
