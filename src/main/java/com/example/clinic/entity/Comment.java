@@ -13,8 +13,6 @@ public class Comment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @GenericGenerator( name = "uuid2", strategy = "uuid2" )
-    @Column( name = "id", columnDefinition = "BINARY(16)" )
     private Long id;
 
     @Column(nullable = false)
@@ -23,7 +21,7 @@ public class Comment {
     @Column(nullable = false)
     private Date date;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY )
     @JsonBackReference
     private Patient patient;
 
