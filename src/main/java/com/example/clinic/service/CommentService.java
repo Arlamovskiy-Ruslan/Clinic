@@ -29,13 +29,15 @@ public class CommentService {
         return commentRepo.save(comment);
     }
 
-    public void updateComment(Comment comment, long id) {
+    public void updateComment(Comment comment, long c_id, long p_id) {
 
-        Optional<Comment> commentOptional = commentRepo.findById(id);
+        Optional<Patient> patientOptional = patientRepo.findById(p_id);
+        Optional<Comment> commentOptional = commentRepo.findById(c_id);
 
-        if (commentOptional.isPresent()) {
-            comment.setId(id);
-
+        if (commentOptional.isPresent() && patientOptional.isPresent()) {
+            Patient patient = patientOptional.get();
+            comment.setId(c_id);
+            comment.setPatient(patient);
             commentRepo.save(comment);
 
             ResponseEntity.noContent().build();
@@ -49,5 +51,7 @@ public class CommentService {
         return commentRepo.findById(id).get();
     }
 
-    public void deleteCommentById(long id) { commentRepo.deleteById(id); }
+    public void deleteCommentById(long id) {
+        commentRepo.deleteById(id);
+    }
 }
