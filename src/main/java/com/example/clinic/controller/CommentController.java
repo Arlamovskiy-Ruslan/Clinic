@@ -27,10 +27,12 @@ public class CommentController {
         return commentService.createComment(comment, id);
     }
 
-    @PostMapping({"/comment/{id}/update"})
-    public ResponseEntity<Comment> updateComment(@RequestBody Comment comment, @PathVariable("id") long id) {
-        commentService.updateComment(comment, id);
-        return new ResponseEntity<>(commentService.getCommentById(id), HttpStatus.OK);
+    @PutMapping({"/{p_id}/comment/{c_id}/update"})
+    public ResponseEntity<Comment> updateComment(@RequestBody Comment comment
+            , @PathVariable("c_id") long c_id
+            , @PathVariable("p_id") long p_id) {
+        commentService.updateComment(comment, c_id, p_id);
+        return new ResponseEntity<>(commentService.getCommentById(c_id), HttpStatus.OK);
     }
 
     @GetMapping({"/comment/{id}"})
