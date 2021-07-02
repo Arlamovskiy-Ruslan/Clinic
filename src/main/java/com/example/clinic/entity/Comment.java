@@ -2,7 +2,6 @@ package com.example.clinic.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Data;
-import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -21,7 +20,9 @@ public class Comment {
     @Column(nullable = false)
     private Date date;
 
-    @ManyToOne(fetch = FetchType.LAZY )
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(nullable = false)
     @JsonBackReference
     private Patient patient;
 
