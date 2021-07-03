@@ -43,8 +43,5 @@ public class PatientController {
         patientService.updatePatient(patient, id);
         return new ResponseEntity<>(patientService.getPatientById(id), HttpStatus.OK);
     }
-
-
-
 }
 
