@@ -42,8 +42,8 @@ public class PatientService {
         return patients;
     }
 
-    public Patient getPatientById(long id) {
-        return patientRepo.findById(id).orElse(patientRepo.findAll().stream().findFirst().get());
+    public Optional<Patient> getPatientById(long id) {
+        return patientRepo.findById(id);
     }
 
     public void deletePatientById(long id) {
