@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @CrossOrigin("*")
@@ -23,7 +24,7 @@ public class PatientController {
     }
 
     @GetMapping({"/patient/{id}"})
-    public Patient retrievePatient(@PathVariable("id") long id) {
+    public Optional<Patient> retrievePatient(@PathVariable("id") long id) {
         return patientService.getPatientById(id);
     }
 
@@ -39,9 +40,9 @@ public class PatientController {
     }
 
     @PutMapping({"/patient/{id}/update"})
-    public ResponseEntity<Patient> updatePatient(@RequestBody Patient patient, @PathVariable("id") long id) {
+    public Optional<Patient> updatePatient(@RequestBody Patient patient, @PathVariable("id") long id) {
         patientService.updatePatient(patient, id);
-        return new ResponseEntity<>(patientService.getPatientById(id), HttpStatus.OK);
+        return patientService.getPatientById(id);
     }
 }
 
