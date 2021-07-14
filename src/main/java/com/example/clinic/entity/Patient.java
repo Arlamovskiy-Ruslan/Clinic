@@ -1,7 +1,10 @@
 package com.example.clinic.entity;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+
 import javax.persistence.*;
 import java.sql.Date;
 import java.util.List;
@@ -36,4 +39,17 @@ public class Patient {
     )
     @JsonManagedReference
     private List<Comment> comment;
+
+
+    public Patient(Long id, String firstName, String lastName, String sex, int age, Date dateOfBirth, String country, String state, String address) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.sex = sex;
+        this.age = age;
+        this.dateOfBirth = dateOfBirth;
+        this.country = country;
+        this.state = state;
+        this.address = address;
+    }
 }
