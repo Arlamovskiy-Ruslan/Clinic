@@ -7,7 +7,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -17,21 +16,19 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.nio.charset.StandardCharsets;
 import java.sql.Date;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class PatientsTests {
+public class PatientsControllerTests {
 
     @Autowired
     private WebApplicationContext context;
@@ -44,8 +41,6 @@ public class PatientsTests {
     @MockBean
     PatientRepo patientRepository;
 
-    
-
     @Autowired
     private static final ObjectMapper mapper;
 
@@ -53,8 +48,11 @@ public class PatientsTests {
         mapper = new ObjectMapper();
     }
 
+    private String URI = "/patient";
+
     @Before
     public void setup() {
+
         mockMvc = MockMvcBuilders
                 .webAppContextSetup(context)
                 .alwaysDo(print())
@@ -65,14 +63,14 @@ public class PatientsTests {
     public void getAllPatientsTest() throws Exception {
         mockMvc
                 .perform(MockMvcRequestBuilders.get("/"))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk()).andDo(print());
     }
 
     @Test
     public void getPatientByIdTest() throws Exception {
         mockMvc
-                .perform(MockMvcRequestBuilders.get("/patient/140"))
-                .andExpect(status().isOk());
+                .perform(MockMvcRequestBuilders.get(URI + "/140"))
+                .andExpect(status().isOk()).andDo(print());
     }
 
     @Test
@@ -84,38 +82,22 @@ public class PatientsTests {
         patient.setLastName("testLN");
         patient.setSex("Male");
         patient.setAge(24);
-        patient.setDateOfBirth(Date.valueOf("2021-07-08"));
+        patient.setDateOfBirth(Date.valueOf("2002-02-13"));
         patient.setCountry("testC");
         patient.setState("testS");
         patient.setAddress("testA");
 
-        Mockito.when(patientServiceMock.createPatient(ArgumentMatchers.any())).thenReturn(patient);
-        String json = mapper.writeValueAsString(patient);
+        Mockito.when(patientServiceMock.createPatient(Mockito.any(Patient.class))).thenReturn(patient);
 
-        mockMvc.perform(
-                MockMvcRequestBuilders.post("/patient/create")
-                        .contentType(MediaType.APPLICATION_JSON_VALUE).characterEncoding("utf-8")
-                        .content(json).accept(MediaType.APPLICATION_JSON_VALUE)).andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(1L))
-                .andExpect(jsonPath("$.firstName").value("testFN"))
-                .andExpect(jsonPath("$.lastName").value("testLN"))
-                .andExpect(jsonPath("$.age").value(24))
-                .andExpect(jsonPath("$.dateOfBirth").value("2021-07-08"))
-                .andExpect(jsonPath("$.sex").value("Male"))
-                .andExpect(jsonPath("$.country").value("testC"))
-                .andExpect(jsonPath("$.state").value("testS"))
-                .andExpect(jsonPath("$.address").value("testA"));
+        mockMvc
+                .perform(MockMvcRequestBuilders.post(URI + "/create")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(patient).getBytes(StandardCharsets.UTF_8))
+                        .accept(MediaType.APPLICATION_JSON)).andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn();
 
-        Mockito.verify(patientServiceMock).createPatient(Mockito.any(Patient.class));
 
     }
+    
 
-    @Test
-    public void deletePatientTest() throws Exception {
-
-        MvcResult requestResult = mockMvc.perform(MockMvcRequestBuilders.delete("/patient/{id}/delete").param("id", "1"))
-                .andExpect(status().isOk()).andExpect(status().isOk()).andReturn();
-        String result = requestResult.getResponse().getContentAsString();
-        assertEquals(result, "Student is deleted");
-    }
 }
