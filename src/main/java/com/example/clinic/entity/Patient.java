@@ -36,5 +36,4 @@ public class Patient {
     )
     @JsonManagedReference
     private List<Comment> comment;
-
 }
