@@ -4,6 +4,7 @@ import com.example.clinic.entity.Patient;
 import com.example.clinic.repo.PatientRepo;
 import com.example.clinic.service.PatientService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,7 +16,9 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
@@ -23,6 +26,8 @@ import org.springframework.web.context.WebApplicationContext;
 import java.nio.charset.StandardCharsets;
 import java.sql.Date;
 
+import static net.bytebuddy.matcher.ElementMatchers.is;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -30,19 +35,19 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class PatientsControllerTests {
 
+    private MockMvc mockMvc;
+
     @Autowired
     private WebApplicationContext context;
 
-    private MockMvc mockMvc;
+    @Autowired
+    private static final ObjectMapper mapper;
 
     @MockBean
-    private PatientService patientServiceMock;
+    PatientService patientServiceMock;
 
     @MockBean
     PatientRepo patientRepository;
-
-    @Autowired
-    private static final ObjectMapper mapper;
 
     static {
         mapper = new ObjectMapper();
@@ -87,17 +92,68 @@ public class PatientsControllerTests {
         patient.setState("testS");
         patient.setAddress("testA");
 
-        Mockito.when(patientServiceMock.createPatient(Mockito.any(Patient.class))).thenReturn(patient);
+        when(patientServiceMock.createPatient(Mockito.any(Patient.class))).thenReturn(patient);
 
-        mockMvc
+        MvcResult result = mockMvc
                 .perform(MockMvcRequestBuilders.post(URI + "/create")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(patient).getBytes(StandardCharsets.UTF_8))
-                        .accept(MediaType.APPLICATION_JSON)).andExpect(MockMvcResultMatchers.status().isOk())
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andDo(print())
                 .andReturn();
 
+        Assertions.assertThat(result).isNotNull();
+        String userJson = result.getResponse().getContentAsString();
+        Assertions.assertThat(userJson).isNotEmpty();
 
     }
-    
+
+    @Test
+    public void deletePatientTest() throws Exception {
+
+        long patientId = 1;
+
+        PatientService serviceSpy = Mockito.spy(patientServiceMock);
+        Mockito.doNothing().when(serviceSpy).deletePatientById(patientId);
+
+        mockMvc.perform(MockMvcRequestBuilders.delete("/patient/delete/1")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNoContent())
+                .andDo(print());
+
+        verify(patientServiceMock, times(1)).deletePatientById(patientId);
+
+    }
+
+    @Test
+    public void updatePatient() throws Exception {
+
+        long id = 1;
+
+        Patient patient = new Patient();
+        patient.setFirstName("testFN");
+        patient.setLastName("testLN");
+        patient.setSex("Male");
+        patient.setAge(24);
+        patient.setDateOfBirth(Date.valueOf("2002-02-13"));
+        patient.setCountry("testC");
+        patient.setState("testS");
+        patient.setAddress("testA");
+
+        MvcResult result = mockMvc
+                .perform(MockMvcRequestBuilders.put(URI + "/update/" + id)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(patient).getBytes(StandardCharsets.UTF_8))
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andDo(print())
+                .andReturn();
+
+        Assertions.assertThat(result).isNotNull();
+        String userJson = result.getResponse().getContentAsString();
+        Assertions.assertThat(userJson).isNotEmpty();
+
+    }
 
 }
