@@ -1,7 +1,6 @@
 package com.example.clinic.Patients;
 
 import com.example.clinic.entity.Patient;
-import com.example.clinic.repo.PatientRepo;
 import com.example.clinic.service.PatientService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.assertj.core.api.Assertions;
@@ -16,9 +15,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
@@ -26,7 +23,6 @@ import org.springframework.web.context.WebApplicationContext;
 import java.nio.charset.StandardCharsets;
 import java.sql.Date;
 
-import static net.bytebuddy.matcher.ElementMatchers.is;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -46,12 +42,21 @@ public class PatientsControllerTests {
     @MockBean
     PatientService patientServiceMock;
 
-    @MockBean
-    PatientRepo patientRepository;
-
     static {
         mapper = new ObjectMapper();
     }
+
+    private final Patient patient = new Patient(
+            1L,
+            "testFN",
+            "testLN",
+            "Male",
+            24,
+            Date.valueOf("2002-02-13"),
+            "testC",
+            "testS",
+            "testA");
+
 
     private String URI = "/patient";
 
@@ -73,24 +78,18 @@ public class PatientsControllerTests {
 
     @Test
     public void getPatientByIdTest() throws Exception {
+
+        long patientId = 140;
+
         mockMvc
-                .perform(MockMvcRequestBuilders.get(URI + "/140"))
+                .perform(MockMvcRequestBuilders.get(URI + "/" + patientId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk()).andDo(print());
     }
 
     @Test
     public void createNewPatientTest() throws Exception {
-
-        Patient patient = new Patient();
-        patient.setId(1L);
-        patient.setFirstName("testFN");
-        patient.setLastName("testLN");
-        patient.setSex("Male");
-        patient.setAge(24);
-        patient.setDateOfBirth(Date.valueOf("2002-02-13"));
-        patient.setCountry("testC");
-        patient.setState("testS");
-        patient.setAddress("testA");
 
         when(patientServiceMock.createPatient(Mockito.any(Patient.class))).thenReturn(patient);
 
@@ -130,16 +129,6 @@ public class PatientsControllerTests {
     public void updatePatient() throws Exception {
 
         long id = 1;
-
-        Patient patient = new Patient();
-        patient.setFirstName("testFN");
-        patient.setLastName("testLN");
-        patient.setSex("Male");
-        patient.setAge(24);
-        patient.setDateOfBirth(Date.valueOf("2002-02-13"));
-        patient.setCountry("testC");
-        patient.setState("testS");
-        patient.setAddress("testA");
 
         MvcResult result = mockMvc
                 .perform(MockMvcRequestBuilders.put(URI + "/update/" + id)
