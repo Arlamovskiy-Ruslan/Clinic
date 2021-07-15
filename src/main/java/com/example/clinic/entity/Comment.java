@@ -26,6 +26,9 @@ public class Comment {
     @JsonBackReference
     private Patient patient;
 
+    public Comment() {
+    }
+
     public Comment(Long id, String text, Date date) {
         this.id = id;
         this.text = text;

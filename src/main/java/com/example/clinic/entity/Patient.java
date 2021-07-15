@@ -38,6 +38,8 @@ public class Patient {
     @JsonManagedReference
     private List<Comment> comment;
 
+    public Patient() {
+    }
 
     public Patient(Long id, String firstName, String lastName, String sex, int age, Date dateOfBirth, String country, String state, String address) {
         this.id = id;
