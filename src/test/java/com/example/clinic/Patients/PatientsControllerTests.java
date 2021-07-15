@@ -1,6 +1,7 @@
 package com.example.clinic.Patients;
 
 import com.example.clinic.entity.Patient;
+import com.example.clinic.repo.PatientRepo;
 import com.example.clinic.service.PatientService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.assertj.core.api.Assertions;
@@ -22,6 +23,9 @@ import org.springframework.web.context.WebApplicationContext;
 
 import java.nio.charset.StandardCharsets;
 import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -42,20 +46,17 @@ public class PatientsControllerTests {
     @MockBean
     PatientService patientServiceMock;
 
+    @MockBean
+    PatientRepo patientRepo;
+
     static {
         mapper = new ObjectMapper();
     }
 
-    private final Patient patient = new Patient(
-            1L,
-            "testFN",
-            "testLN",
-            "Male",
-            24,
-            Date.valueOf("2002-02-13"),
-            "testC",
-            "testS",
-            "testA");
+    private List<Patient> patients = new ArrayList<>();
+
+    Patient patient = new Patient(1L, "1testFN", "1testLN", "Male", 24, Date.valueOf("2002-02-13"), "1testC", "1testS", "1testA");
+    Patient patient1 = new Patient(2L, "2testFN", "2testLN", "Female", 24, Date.valueOf("2002-02-13"), "2testC", "2testS", "2testA");
 
 
     private String URI = "/patient";
@@ -71,21 +72,37 @@ public class PatientsControllerTests {
 
     @Test
     public void getAllPatientsTest() throws Exception {
+
+        patients.add(patient);
+        patients.add(patient1);
+
+        Mockito.when(patientServiceMock.getAllPatients()).thenReturn(patients);
+
         mockMvc
-                .perform(MockMvcRequestBuilders.get("/"))
-                .andExpect(status().isOk()).andDo(print());
+                .perform(MockMvcRequestBuilders.get("/")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(patient).getBytes(StandardCharsets.UTF_8))
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andDo(print());
     }
 
     @Test
     public void getPatientByIdTest() throws Exception {
 
-        long patientId = 140;
+        long id = 0;
+        patients.add(patient);
+        patients.add(patient1);
+
+        Mockito.when(patientServiceMock.getPatientById(id)).thenReturn(Optional.ofNullable(patients.get((int) id)));
 
         mockMvc
-                .perform(MockMvcRequestBuilders.get(URI + "/" + patientId)
+                .perform(MockMvcRequestBuilders.get(URI + "/" + id)
                         .contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(patients).getBytes(StandardCharsets.UTF_8))
                         .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk()).andDo(print());
+                .andExpect(status().isOk())
+                .andDo(print());
     }
 
     @Test
@@ -111,17 +128,19 @@ public class PatientsControllerTests {
     @Test
     public void deletePatientTest() throws Exception {
 
-        long patientId = 1;
+        long id = 1;
 
         PatientService serviceSpy = Mockito.spy(patientServiceMock);
-        Mockito.doNothing().when(serviceSpy).deletePatientById(patientId);
+        Mockito.doNothing().when(serviceSpy).deletePatientById(id);
 
-        mockMvc.perform(MockMvcRequestBuilders.delete("/patient/delete/1")
-                .contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(MockMvcRequestBuilders.delete(URI + "/delete/"+ id)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(patients).getBytes(StandardCharsets.UTF_8))
+                .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent())
                 .andDo(print());
 
-        verify(patientServiceMock, times(1)).deletePatientById(patientId);
+        verify(patientServiceMock, times(1)).deletePatientById(id);
 
     }
 
