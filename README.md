@@ -1,6 +1,6 @@
 # Clinic
 
-   *Requests*
+   *Postman Requests*
 ```
 / - main page
 
