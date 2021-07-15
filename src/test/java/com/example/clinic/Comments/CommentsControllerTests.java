@@ -1,8 +1,7 @@
 package com.example.clinic.Comments;
 
 import com.example.clinic.entity.Comment;
-import com.example.clinic.entity.Patient;
-import com.example.clinic.service.PatientService;
+import com.example.clinic.service.CommentService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.assertj.core.api.Assertions;
 import org.junit.Before;
@@ -23,6 +22,8 @@ import org.springframework.web.context.WebApplicationContext;
 
 import java.nio.charset.StandardCharsets;
 import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -41,20 +42,18 @@ public class CommentsControllerTests {
     private static final ObjectMapper mapper;
 
     @MockBean
-    PatientService patientServiceMock;
+    CommentService commentServiceMock;
 
     static {
         mapper = new ObjectMapper();
     }
 
-    private final Comment comment = new Comment(
-            1L,
-            "testTEXT",
-            Date.valueOf("2002-02-13")
-    );
+    private final List<Comment> comments = new ArrayList<>();
 
+    Comment comment = new Comment(1L, "testTEXT", Date.valueOf("2002-02-13"));
+    Comment comment1 = new Comment(2L, "1testTEXT", Date.valueOf("2002-02-13"));
 
-    private String URI = "/patient";
+    private final String URI = "/patient";
 
     @Before
     public void setup() {
@@ -68,13 +67,74 @@ public class CommentsControllerTests {
     @Test
     public void getCommentByIdTest() throws Exception {
 
-        long commentId = 227;
+        long id = 0;
+        comments.add(comment);
+        comments.add(comment1);
+
+        Mockito.when(commentServiceMock.getCommentById(id)).thenReturn(comments.get((int) id));
 
         mockMvc
-                .perform(MockMvcRequestBuilders.get(URI + "/" + commentId)
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk()).andDo(print());
+                .perform(MockMvcRequestBuilders.get(URI + "/comment/" + id)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(comments).getBytes(StandardCharsets.UTF_8))
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andDo(print());
     }
 
+    @Test
+    public void createNewCommentTest() throws Exception {
+
+        long patientId = 1;
+        when(commentServiceMock.createComment(comment, patientId)).thenReturn(comment);
+
+        MvcResult result = mockMvc
+                .perform(MockMvcRequestBuilders.post(URI + "/" + patientId + "/comment/create")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(comment).getBytes(StandardCharsets.UTF_8))
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andDo(print())
+                .andReturn();
+
+        Assertions.assertThat(result).isNotNull();
+        String userJson = result.getResponse().getContentAsString();
+        Assertions.assertThat(userJson).isNotEmpty();
+
+    }
+
+    @Test
+    public void deletePatientTest() throws Exception {
+
+        long id = 1;
+
+        CommentService serviceSpy = Mockito.spy(commentServiceMock);
+        Mockito.doNothing().when(serviceSpy).deleteCommentById(id);
+
+        mockMvc.perform(MockMvcRequestBuilders.delete(URI + "/comment/" + id + "/delete")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(comments).getBytes(StandardCharsets.UTF_8))
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNoContent())
+                .andDo(print());
+
+        verify(commentServiceMock, times(1)).deleteCommentById(id);
+
+    }
+
+    @Test
+    public void updateCommentTest() throws Exception {
+
+        long patientId = 1;
+        long id = 1;
+
+        mockMvc
+                .perform(MockMvcRequestBuilders.put(URI + "/" + patientId + "/comment/" + id + "/update")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(comment).getBytes(StandardCharsets.UTF_8))
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andDo(print())
+                .andReturn();
+    }
 }
