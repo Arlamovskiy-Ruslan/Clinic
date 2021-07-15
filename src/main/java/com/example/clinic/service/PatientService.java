@@ -37,9 +37,7 @@ public class PatientService {
     }
 
     public List<Patient> getAllPatients() {
-        List<Patient> patients = new ArrayList<>();
-        patients.addAll(patientRepo.findAll());
-        return patients;
+        return new ArrayList<>(patientRepo.findAll());
     }
 
     public Optional<Patient> getPatientById(long id) {
