@@ -28,7 +28,7 @@ public class PatientController {
         return patientService.getPatientById(id);
     }
 
-    @DeleteMapping({"/patient/delete/{id}"})
+    @DeleteMapping({"/patient/{id}/delete"})
     public ResponseEntity<Patient> deletePatient(@PathVariable("id") long id) {
         patientService.deletePatientById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -39,7 +39,7 @@ public class PatientController {
         return patientService.createPatient(patient);
     }
 
-    @PutMapping({"/patient/update/{id}"})
+    @PutMapping({"/patient/{id}/update"})
     public Optional<Patient> updatePatient(@RequestBody Patient patient, @PathVariable("id") long id) {
         patientService.updatePatient(patient, id);
         return patientService.getPatientById(id);
