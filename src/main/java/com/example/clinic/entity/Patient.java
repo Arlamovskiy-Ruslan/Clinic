@@ -1,8 +1,6 @@
 package com.example.clinic.entity;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import javax.persistence.*;
