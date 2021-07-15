@@ -53,13 +53,13 @@ public class PatientsControllerTests {
         mapper = new ObjectMapper();
     }
 
-    private List<Patient> patients = new ArrayList<>();
+    private final List<Patient> patients = new ArrayList<>();
 
     Patient patient = new Patient(1L, "1testFN", "1testLN", "Male", 24, Date.valueOf("2002-02-13"), "1testC", "1testS", "1testA");
     Patient patient1 = new Patient(2L, "2testFN", "2testLN", "Female", 24, Date.valueOf("2002-02-13"), "2testC", "2testS", "2testA");
 
 
-    private String URI = "/patient";
+    private final String URI = "/patient";
 
     @Before
     public void setup() {
@@ -133,7 +133,7 @@ public class PatientsControllerTests {
         PatientService serviceSpy = Mockito.spy(patientServiceMock);
         Mockito.doNothing().when(serviceSpy).deletePatientById(id);
 
-        mockMvc.perform(MockMvcRequestBuilders.delete(URI + "/delete/"+ id)
+        mockMvc.perform(MockMvcRequestBuilders.delete(URI + "/delete/" + id)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(mapper.writeValueAsString(patients).getBytes(StandardCharsets.UTF_8))
                 .accept(MediaType.APPLICATION_JSON))
@@ -145,7 +145,7 @@ public class PatientsControllerTests {
     }
 
     @Test
-    public void updatePatient() throws Exception {
+    public void updatePatientTest() throws Exception {
 
         long id = 1;
 
