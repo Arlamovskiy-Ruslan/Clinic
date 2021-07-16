@@ -1,4 +1,4 @@
-package com.example.clinic.Comments;
+package com.example.clinic.Comments.Controller;
 
 import com.example.clinic.entity.Comment;
 import com.example.clinic.service.CommentService;
