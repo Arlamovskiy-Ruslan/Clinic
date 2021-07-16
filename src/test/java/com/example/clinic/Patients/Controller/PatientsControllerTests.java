@@ -1,4 +1,4 @@
-package com.example.clinic.Patients;
+package com.example.clinic.Patients.Controller;
 
 import com.example.clinic.entity.Patient;
 import com.example.clinic.repo.PatientRepo;
@@ -133,7 +133,7 @@ public class PatientsControllerTests {
         PatientService serviceSpy = Mockito.spy(patientServiceMock);
         Mockito.doNothing().when(serviceSpy).deletePatientById(id);
 
-        mockMvc.perform(MockMvcRequestBuilders.delete(URI + "/delete/" + id)
+        mockMvc.perform(MockMvcRequestBuilders.delete(URI + "/" + id + "/delete")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(mapper.writeValueAsString(patients).getBytes(StandardCharsets.UTF_8))
                 .accept(MediaType.APPLICATION_JSON))
@@ -150,7 +150,7 @@ public class PatientsControllerTests {
         long id = 1;
 
         MvcResult result = mockMvc
-                .perform(MockMvcRequestBuilders.put(URI + "/update/" + id)
+                .perform(MockMvcRequestBuilders.put(URI + "/" + id + "/update")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(patient).getBytes(StandardCharsets.UTF_8))
                         .accept(MediaType.APPLICATION_JSON))
