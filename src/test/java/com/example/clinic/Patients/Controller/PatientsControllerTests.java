@@ -126,7 +126,7 @@ public class PatientsControllerTests {
     }
 
     @Test
-    public void deletePatientTest() throws Exception {
+    public void deletePatientByIdTest() throws Exception {
 
         long id = 1;
 

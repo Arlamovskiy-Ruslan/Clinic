@@ -6,29 +6,16 @@ import com.example.clinic.service.PatientService;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import java.util.Optional;
 
 @RunWith(MockitoJUnitRunner.class)
 public class PatientServiceTest {
@@ -58,8 +45,49 @@ public class PatientServiceTest {
         patients.add(patient1);
 
         Mockito.when(patientRepositoryMock.findAll()).thenReturn(patients);
-        List all = patientService.getAllPatients();
+        List<Patient> all = patientService.getAllPatients();
 
         Assert.assertNotNull(all);
+        Assert.assertEquals(patients, all);
+    }
+
+    @Test
+    public void getPatientByIdTest() {
+        patients.add(patient);
+
+        Mockito.when(patientRepositoryMock.findById(patient.getId())).thenReturn(Optional.ofNullable(patient));
+        Optional<Patient> getById = patientService.getPatientById(patient.getId());
+
+        Assert.assertNotNull(getById);
+    }
+
+    @Test
+    public void createPatientTest() {
+        patients.add(patient);
+
+        Mockito.when(patientRepositoryMock.save(patient)).thenReturn(patient);
+        Optional<Patient> create = Optional.ofNullable(patientService.createPatient(patient));
+
+        Assert.assertNotNull(create);
+    }
+
+    @Test
+    public void deletePatientByIdTest() {
+        patients.add(patient);
+
+        PatientRepo serviceSpy = Mockito.spy(patientRepositoryMock);
+        Mockito.doNothing().when(serviceSpy).deleteById(patient.getId());
+
+        patientService.deletePatientById(patient.getId());
+    }
+
+    @Test
+    public void updatePatientByIdTest() {
+        patients.add(patient1);
+
+        Mockito.when(patientRepositoryMock.saveAndFlush(patient1)).thenReturn(patient1);
+
+        patientService.updatePatient(patient1, patient1.getId());
+
     }
 }
